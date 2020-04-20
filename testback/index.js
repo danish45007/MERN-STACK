@@ -19,12 +19,32 @@ app.listen(port,() => {
 });
 
 
-
-
-
-
 // const port = 3000
 
 // app.get('/', (req, res) => res.send('Hello World!'))
 
 // app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
+
+
+// Admin route...
+// app.get("/admin", (req,res) => {
+//     return res.send("This is the admin")
+
+// });
+const isAdmin = (req,res,next) => {
+    console.log("isAdimin is running.")
+    next();
+}
+// check for logged in
+const isLoggedin = (req,res,next) => {
+    console.log("isLoggedin")
+    next();
+}
+
+
+const admin = (req,res) => {
+    return res.send("This is admin......!")
+};
+
+app.get("/admin",isAdmin,isLoggedin,admin)
+
