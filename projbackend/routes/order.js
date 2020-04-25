@@ -22,9 +22,10 @@ router.post("/order/create/:userId", isSingedIn, isAuthenticated, pushOrderInPur
 // Read route to read all the order
 router.get("/order/all/:userId", isSingedIn, isAuthenticated, isAdmin, getAllOrders);
 
-// status of order
+// get status of order
 router.get("/order/status/:userId",isSingedIn, isAuthenticated, isAdmin, getStatus)
 
+// add the status of ordere
 router.put("/order/:orderId/status/:userId",isSingedIn, isAuthenticated, isAdmin, updateStatus)
 
 module.exports = router;
