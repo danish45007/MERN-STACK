@@ -1,7 +1,6 @@
-import React,{Fragment} from "react";
+import React, { Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
-import {signout,isAutheticated} from "../auth/helper"
-
+import { signout, isAutheticated } from "../auth/helper";
 
 const currentTab = (history, path) => {
   if (history.location.pathname === path) {
@@ -28,27 +27,27 @@ const Menu = ({ history }) => (
           Cart
         </Link>
       </li>
-      {isAutheticated() && isAutheticated().user.role===0 && (
+      {isAutheticated() && isAutheticated().user.role === 0 && (
         <li className="nav-item">
           <Link
             style={currentTab(history, "/user/dashboard")}
             className="nav-link"
             to="/user/dashboard"
           >
-            U.Dashboard
+            U. Dashboard
           </Link>
-      </li>
+        </li>
       )}
-      {isAutheticated() && isAutheticated().user.role===1 &&(
+      {isAutheticated() && isAutheticated().user.role === 1 && (
         <li className="nav-item">
           <Link
             style={currentTab(history, "/admin/dashboard")}
             className="nav-link"
             to="/admin/dashboard"
           >
-            A.Dashboard
+            A. Dashboard
           </Link>
-      </li>
+        </li>
       )}
       {!isAutheticated() && (
         <Fragment>
@@ -71,17 +70,20 @@ const Menu = ({ history }) => (
             </Link>
           </li>
         </Fragment>
-      )};
+      )}
       {isAutheticated() && (
         <li className="nav-item">
-        <span className="nav-link text-warning" onClick={() => {
-          signout(() => {
-            history.push("/")
-          })
-        }}>
-          Signout
-        </span>
-      </li>
+          <span
+            className="nav-link text-warning"
+            onClick={() => {
+              signout(() => {
+                history.push("/");
+              });
+            }}
+          >
+            Signout
+          </span>
+        </li>
       )}
     </ul>
   </div>

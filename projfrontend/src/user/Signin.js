@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Base from "../core/Base";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import { signin, authenticate, isAutheticated } from "../auth/helper";
 
 const Signin = () => {
   const [values, setValues] = useState({
-    email: "",
-    password: "",
+    email: "a@hitesh.com",
+    password: "12345",
     error: "",
     loading: false,
     didRedirect: false
@@ -48,7 +48,7 @@ const Signin = () => {
       }
     }
     if (isAutheticated()) {
-      return <Redirect to="/signin" />;
+      return <Redirect to="/" />;
     }
   };
 
@@ -116,6 +116,7 @@ const Signin = () => {
       {errorMessage()}
       {signInForm()}
       {performRedirect()}
+
       <p className="text-white text-center">{JSON.stringify(values)}</p>
     </Base>
   );
