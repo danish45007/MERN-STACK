@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Base from "../core/Base";
 import { Link } from "react-router-dom";
-import { getCategories } from "./helper/adminapicall";
-import { isAutheticated } from "../auth/helper"
-import {createaProduct} from "./helper/adminapicall"
+import { getCategories, createaProduct } from "./helper/adminapicall";
+import { isAutheticated } from "../auth/helper/index";
 
 const AddProduct = () => {
-  const {user, token} = isAutheticated();
+  const { user, token } = isAutheticated();
+
   const [values, setValues] = useState({
     name: "",
     description: "",
@@ -38,12 +38,11 @@ const AddProduct = () => {
 
   const preload = () => {
     getCategories().then(data => {
-      // console.log(data);
+      //console.log(data);
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
         setValues({ ...values, categories: data, formData: new FormData() });
-        
       }
     });
   };
@@ -52,15 +51,16 @@ const AddProduct = () => {
     preload();
   }, []);
 
-  const onSubmit = (event) => {
+  const onSubmit = event => {
     event.preventDefault();
-    setValues({...values, error: "",loading: true})
-    createaProduct(user._id,token,formData).then(data => {
-      if(data.error){
-        setValues({...values, error: data.error})
-      }else{
+    setValues({ ...values, error: "", loading: true });
+    createaProduct(user._id, token, formData).then(data => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
         setValues({
           ...values,
+          name: "",
           description: "",
           price: "",
           photo: "",
@@ -73,24 +73,19 @@ const AddProduct = () => {
   };
 
   const handleChange = name => event => {
-    const value = name === "photo" ? event.target.files[0] : event.target.value
-    formData.set(name,value);
-    setValues({...values, [name]:value})
+    const value = name === "photo" ? event.target.files[0] : event.target.value;
+    formData.set(name, value);
+    setValues({ ...values, [name]: value });
   };
 
   const successMessage = () => (
-    <div className="alert alert-success mt-3" style={{display: createdProduct ? "" : "none"}}>
-      <h4>{createdProduct} Created successfully</h4>
+    <div
+      className="alert alert-success mt-3"
+      style={{ display: createdProduct ? "" : "none" }}
+    >
+      <h4>{createdProduct} created successfully</h4>
     </div>
-  )
-
-  const warningMessage = () => {
-    if (error) {
-      return (<div className="alert alert-success mt-3">
-      <h4>{error} Unable to create Product</h4>
-    </div>
-      )}
-  }
+  );
 
   const createProductForm = () => (
     <form>
@@ -141,10 +136,11 @@ const AddProduct = () => {
         >
           <option>Select</option>
           {categories &&
-            categories.map((cate,index) =>(
-              <option key={index} value={cate._id} >{cate.name}</option>
-            ))
-          }
+            categories.map((cate, index) => (
+              <option key={index} value={cate._id}>
+                {cate.name}
+              </option>
+            ))}
         </select>
       </div>
       <div className="form-group">
@@ -171,16 +167,16 @@ const AddProduct = () => {
     <Base
       title="Add a product here!"
       description="Welcome to product creation section"
-      className="container bg-success p-4"
+      className="container bg-info p-4"
     >
       <Link to="/admin/dashboard" className="btn btn-md btn-dark mb-3">
         Admin Home
       </Link>
       <div className="row bg-dark text-white rounded">
         <div className="col-md-8 offset-md-2">
-        {successMessage()}
-        {warningMessage()}
-        {createProductForm()}</div>
+          {successMessage()}
+          {createProductForm()}
+        </div>
       </div>
     </Base>
   );

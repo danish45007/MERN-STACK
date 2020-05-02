@@ -16,7 +16,7 @@ router.post("/category/create/:userId",isSingedIn, isAuthenticated, isAdmin ,cre
 
 // read/get
 router.get("/category/:categoryId",getCategory);
-router.get("/categoris",getAllCategory);
+router.get("/categories",getAllCategory);
 
 // update/put   
 router.put("/category/:categoryId/:userId",isSingedIn,isAuthenticated,isAdmin,updateCategory);

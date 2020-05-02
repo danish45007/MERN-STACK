@@ -1,50 +1,55 @@
-const express = require('express')
-const app = express()
-const port = 8000
-app.get('/',(req,res) => {
-    return res.send("home")
+const cors = require("cors")
+const express = require("express")
+const stripe = require("stripe")("sk_test_v5N7yzVFH9rf2xpKQxsM0UgG008KRQBlkX")
+const uuid = require("uuid/v4")
+
+
+const app = express();
+
+
+// Middleware
+
+app.use(express.json())
+app.use(cors())
+
+
+// routes
+app.get("/",(req,res) => {
+    res.send("It works");
 });
 
-app.get('/login',(req,res) => {
-    return res.send("login")
-});
+app.post("/payment", (req,res) => {
+    const {product, token} = req.body;
+    console.log("PRODUCT", product);
+    console.log("PRICE", product.price);
+    const idempontencyKey = uuid()
 
-app.get('/logout',(req,res) => {
-    return res.send("logout")
-});
+    return stripe.customers.create({
+        email: token.email,
+        source: token.id
+    }).then(customer => {
+        stripe.charges.create({
+            amount: product.price * 100,
+            currency: 'usd',
+            customer: customer.id,
+            receipt_email: token.email,
+            description: ` purchase of product.name`,
+            shipping: {
+                name: token.card.name,
+                address: {
+                    country: token.card.address_country
+                }
+            }
+        }, {idempontencyKey})
+    })
+    .then(result => res.status(200).json(result))
+    .catch(err => console.log(err))
 
-
-app.listen(port,() => {
-    console.log("Server is Running...")
-});
-
-
-// const port = 3000
-
-// app.get('/', (req, res) => res.send('Hello World!'))
-
-// app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
-
-
-// Admin route...
-// app.get("/admin", (req,res) => {
-//     return res.send("This is the admin")
-
-// });
-const isAdmin = (req,res,next) => {
-    console.log("isAdimin is running.")
-    next();
-}
-// check for logged in
-const isLoggedin = (req,res,next) => {
-    console.log("isLoggedin")
-    next();
-}
+})
 
 
-const admin = (req,res) => {
-    return res.send("This is admin......!")
-};
 
-app.get("/admin",isAdmin,isLoggedin,admin)
+// Listen
 
+
+app.listen(8282, () => console.log("LISTENING AT PORT 8282"))
